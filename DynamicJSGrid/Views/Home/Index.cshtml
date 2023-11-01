@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<html>
+  
+<head>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+    
+</head>
+<body>
+    <div id="jsGrid"></div>
+
+    <script>
+
+        //$.ajax({
+        //    url: '/Home/Student',
+        //    async: false,
+        //    type: 'Get',
+        //    dataType: 'json',
+        //    contentType: "application/json; charset=utf-8",
+        //    success: function (response) {
+        //        //console.log(response.value);
+        //        //datos = JSON.stringify(response);
+        //        dato = JSON.parse(JSON.stringify(response));
+        //        //alert(response);
+        //    }
+        //});
+
+
+        $("#jsGrid").jsGrid({
+            height: "auto",
+            width: "100%",
+            filtering: true,
+            inserting: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+            autoload: true,
+
+            pageSize: 10,
+            pageButtonCount: 5,
+
+            deleteConfirm: "Do you really want to delete client?",
+
+            controller: {
+                    loadData: function (filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: "/Home/Student",
+                            data: filter,
+                            dataType: "json"
+                        });
+                    },
+
+                    insertItem: function (item) {
+                        return $.ajax({
+                            type: "POST",
+                            url: "/Home/Addstd",
+                            data: item,
+                            dataType: "json"
+                        });
+                    },
+
+                    updateItem: function (item) {
+                        return $.ajax({
+                            type: "PUT",
+                            url: "/Home/EditEmployee/" + item.ID,
+                            data: item,
+                            dataType: "json"
+                        });
+                    },
+
+                    deleteItem: function (item) {
+                        return $.ajax({
+                            type: "post",
+                            url: "/Home/Delete/" + item.Id,
+                            data:item,
+                            dataType: "json"
+                        });
+                    },
+            },
+                fields: [
+                    { name: "name", type: "text", width: 50, validate: "required" },
+                    { name: "rollno", type: "number", width: 50, validate: "required" },
+                    { name: "section", type: "text", width: 50, validate: "required" },
+                    { name: "branch", type: "text", width: 50, validate: "required" },
+                    { type:"control"}
+
+                ]
+        });
+
+
+
+    </script>
+
+</body>
+</html>
